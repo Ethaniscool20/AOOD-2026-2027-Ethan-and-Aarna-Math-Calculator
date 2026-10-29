@@ -49,14 +49,9 @@ function updateValue(character) {
 console.log(equation);
 }
 function updateValueSpecial(characterz){
-    let temporary = "";
-    if(characterz == "tan"){temporary = "e";}
-    if(characterz == "cos"){temporary = "w";}
-    if(characterz == "sin"){temporary = "q";}
-    if(characterz == "mean"){temporary = "r";}
-    if(characterz == "mode"){temporary = "t";}
-     equation = equation + temporary;
-    console.log(equation);
+     const codes = { tan: "e", cos: "w", sin: "q", mean: "r", mode: "t" };
+ equation = equation + codes[characterz];
+  console.log(equation);
 }
 
 
