@@ -45,7 +45,7 @@ document.getElementById("hellothere").innerHTML = equation;
 }
 
 function updateValue(character) {
- equation = equation + toString(character);
+ equation = equation + character;
 console.log(equation);
 }
 function updateValueSpecial(characterz){
