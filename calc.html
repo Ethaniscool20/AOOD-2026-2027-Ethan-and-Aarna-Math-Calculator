@@ -15,8 +15,11 @@
 
 
 <input type="text" id="username" class="center" name="username" required minlength="1" maxlength="100" placeholder="Enter equation">
-<h3 class="center" id="hellothere"> </h3>
 
+<div>
+<h3 class="center" id="hellothere"> </h3>
+<img id= "yeehaw" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Empty image" width="100" height="100">
+</div>
 
   <div class="butt">  
 <button id="1">1</button>
@@ -52,65 +55,119 @@
      <img src="images/OIP.webp" alt="Button Image" width="50" height="50"> 
 </button>
 </div>
+
+<div class="center" style="margin: 10px auto; text-align: center;">
+  <label for="fileInput">Upload Calculation File (.txt): </label>
+  <input type="file" id="fileInput" accept=".txt,.csv">
+  <button id = "read my file big boy">read my file now.</button>
+</div>
+<div class="center" style="margin: 10px auto; text-align: center;">
+  <h1></h1>
+  <img id= "yeehaw" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="Empty image" width="100" height="100">
+
+</div>
+
+
  <script>
 let equation = "";
+let elfin="";
+let elsecretoequation="";
+// Wrap updateValue in anonymous functions so they only trigger on click
+document.getElementById("1").addEventListener("click", () => updateValue("1"));
+document.getElementById("2").addEventListener("click", () => updateValue("2"));
+document.getElementById("3").addEventListener("click", () => updateValue("3"));
+document.getElementById("4").addEventListener("click", () => updateValue("4"));
+document.getElementById("5").addEventListener("click", () => updateValue("5"));
+document.getElementById("6").addEventListener("click", () => updateValue("6"));
+document.getElementById("7").addEventListener("click", () => updateValue("7"));
+document.getElementById("8").addEventListener("click", () => updateValue("8"));
+document.getElementById("9").addEventListener("click", () => updateValue("9"));
+document.getElementById("0").addEventListener("click", () => updateValue("0"));
+document.getElementById("-").addEventListener("click", () => updateValue(" - "));
+document.getElementById("+").addEventListener("click", () => updateValue(" + "));
+document.getElementById("/").addEventListener("click", () => updateValue(" / "));
+document.getElementById("*").addEventListener("click", () => updateValue(" * "));
 
+// Special buttons
+document.getElementById("sin").addEventListener("click", () => updateValueSpecial("sin"));
+document.getElementById("cos").addEventListener("click", () => updateValueSpecial("cos"));
+document.getElementById("tan").addEventListener("click", () => updateValueSpecial("tan"));
+document.getElementById("mean").addEventListener("click", () => updateValueSpecial("mean"));
+document.getElementById("mode").addEventListener("click", () => updateValueSpecial("mode"));
 
-// let oneButt=document.getElementById("1");
-// let twoButt=document.getElementById("2");
-// let threeButt=document.getElementById("3");
-// let fourButt=document.getElementById("4");
-// let fiveButt=document.getElementById("5");
-// let sixButt=document.getElementById("6");
-// let sevenButt=document.getElementById("7");
-// let eightButt=document.getElementById("8");
-// let nineButt=document.getElementById("9");
-// let zeroButt=document.getElementById("0");
-// let negativeButt=document.getElementById("-");
-// let runButt=document.getElementById("run");
-
-document.getElementById("1").addEventListener("click", updateValue(1));
-document.getElementById("2").addEventListener("click", updateValue(2));
-document.getElementById("3").addEventListener("click", updateValue(3));
-document.getElementById("4").addEventListener("click", updateValue(4));
-document.getElementById("5").addEventListener("click", updateValue(5));
-document.getElementById("6").addEventListener("click", updateValue(6));
-document.getElementById("7").addEventListener("click", updateValue(7));
-document.getElementById("8").addEventListener("click", updateValue(8));
-document.getElementById("9").addEventListener("click", updateValue(9));
-document.getElementById("0").addEventListener("click", updateValue(0));
-document.getElementById("-").addEventListener("click", updateValue("-"));
+// Run button
 document.getElementById("run").addEventListener("click", updateValues);
 
 
-
-
-
-// <button id="+">+</button>
-// <button id="/">/</button>
-// <button id="*">*</button>
-
-// <button id="sin">sin</button>
-// <button id="cos">cos</button>
-// <button id="tan">tan</button>
-// <button id="mean">mean</button>
-// <button id="mode">mode</button>
-function updateValues(){
-document.getElementById("hellothere").innerHTML = equation;
+function updateValues() {
+  elfin = solvetheequation(elsecretoequation);
+  document.getElementById("hellothere").innerText = elfin;
+  document.getElementById("username").value = equation; // Also updates input box
 }
+
+function solvetheequation(saywallahibrosaywallahi) {
+  let result = "";
+
+  //eval is built in function in js that evaluates a phrase. HOWEVER, convert sin to Math.sin and shi
+result=eval(saywallahibrosaywallahi);
+
+  // ai code start---------------------------------------------------------------------------------------------------------------------
+if (typeof result === "undefined" || Number.isNaN(result)) {
+  // Your error handling code here
+  document.getElementById("hellothere").innerText = "error! error! error!";
+  //this one isnt ai its ai assistance. instead of .innerText here its src to change the image
+document.getElementById("yeehaw").src = "images/dumb-smile.gif";
+  // ai code end-------------------------------------------------------------------------------------------------------------------
+  return result;
+}
+return result;
+}
+
 
 function updateValue(character) {
- equation = equation + character;
-console.log(equation);
-}
-function updateValueSpecial(characterz){
-     const codes = { tan: "e", cos: "w", sin: "q", mean: "r", mode: "t" };
- equation = equation + codes[characterz];
+  equation = equation + character;
+  elsecretoequation = elsecretoequation +character;
   console.log(equation);
+    document.getElementById("username").value = equation;
 }
 
+function updateValueSpecial(characterz) {
+  equation = equation+characterz;
+  //this is some voodoo code. Basically assign a "code character" to each possible chraacterz
+   const codes = { tan: "e", cos: "w", sin: "q", mean: "r", mode: "t" };
+  elsecretoequation = elsecretoequation+codes[characterz];
+ 
+  console.log(equation);
+   document.getElementById("username").value = equation;
+
+//-----------------------------------------------------------------------------------------------------------------------------------------------------------
+//good ol gemini gave me this code to read files
+
+document.getElementById("fileInput").addEventListener("change", function(event) {
+  const file = event.target.files[0];
+  
+  if (file) {
+    const reader = new FileReader();
+    
+    // Read the text inside the file and place it in the text input box
+    reader.onload = function(e) {
+      const fileText = e.target.result.trim();
+      document.getElementById("username").value = fileText;
+      
+      // Update global equation variable if you use one
+      if (typeof equation !== "undefined") {
+        equation = fileText;
+      }
+    };
+    
+    reader.readAsText(file);
+  }
+});
 
 
 
+
+
+}
  </script>
 </body>
