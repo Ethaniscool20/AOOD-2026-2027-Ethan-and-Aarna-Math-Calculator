@@ -59,7 +59,7 @@
 <div class="center" style="margin: 10px auto; text-align: center;">
   <label for="fileInput">Upload Calculation File (.txt): </label>
   <input type="file" id="fileInput" accept=".txt,.csv">
-  <button id = "read my file big boy">read my file now.</button>
+  <button id="readButton">read my file now.</button>
 </div>
 <div class="center" style="margin: 10px auto; text-align: center;">
   <h1></h1>
@@ -143,28 +143,60 @@ function updateValueSpecial(characterz) {
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------
 //good ol gemini gave me this code to read files
 
-document.getElementById("fileInput").addEventListener("change", function(event) {
-  const file = event.target.files[0];
+document.addEventListener("DOMContentLoaded", function() {
+  const readButton = document.getElementById("readButton");
   
-  if (file) {
+  if (!readButton) {
+    console.error("Could not find the button! Make sure your HTML has id='readButton'");
+    return;
+  }
+
+  readButton.addEventListener("click", function() {
+    console.log("Button was clicked!");
+    
+    const fileInput = document.getElementById("fileInput");
+    if (!fileInput) {
+      console.error("Could not find fileInput element!");
+      return;
+    }
+
+    const file = fileInput.files[0];
+    if (!file) {
+      alert("Please choose a file first using 'Choose File'!");
+      return;
+    }
+
+    console.log("File selected:", file.name);
+
     const reader = new FileReader();
     
-    // Read the text inside the file and place it in the text input box
     reader.onload = function(e) {
       const fileText = e.target.result.trim();
-      document.getElementById("username").value = fileText;
+      console.log("File contents read successfully:", fileText);
       
-      // Update global equation variable if you use one
-      if (typeof equation !== "undefined") {
-        equation = fileText;
+      try {
+        const solvedResult = eval(fileText);
+        console.log("Calculated result:", solvedResult);
+        
+        // This puts the solved answer directly into your <h1> tag on the screen!
+        const heading = document.querySelector("h1");
+        if (heading) {
+          heading.innerText = "Result: " + solvedResult;
+        }
+        
+      } catch (error) {
+        console.error("Math evaluation failed:", error);
+        alert("Error in math expression: " + error.message);
       }
     };
     
+    reader.onerror = function(e) {
+      console.error("FileReader failed:", e);
+    };
+
     reader.readAsText(file);
-  }
+  });
 });
-
-
 
 
 
