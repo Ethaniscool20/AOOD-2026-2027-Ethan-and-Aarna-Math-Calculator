@@ -36,6 +36,8 @@
     <button id="+">+</button>
     <button id="/">/</button>
     <button id="*">*</button>
+    <button id=",">,</button>
+    <button id=")">)</button>
 </div>
 
 <div class="butt">
@@ -43,7 +45,9 @@
     <button id="cos">cos</button>
     <button id="tan">tan</button>
     <button id="mean">mean</button>
+    <button id="median">median</button>
     <button id="mode">mode</button>
+    <button id="clear" style="background-color: #ff4d4d; color: white;">C</button>
 </div>
 
 <div class="butt">
@@ -61,10 +65,7 @@
 </div>
 
 <script>
-let equation = "";
-let elsecretoequation = "";
-
-// Number and operator event listeners
+// Number and symbol event listeners
 document.getElementById("1").addEventListener("click", () => updateValue("1"));
 document.getElementById("2").addEventListener("click", () => updateValue("2"));
 document.getElementById("3").addEventListener("click", () => updateValue("3"));
@@ -79,30 +80,47 @@ document.getElementById("-").addEventListener("click", () => updateValue(" - "))
 document.getElementById("+").addEventListener("click", () => updateValue(" + "));
 document.getElementById("/").addEventListener("click", () => updateValue(" / "));
 document.getElementById("*").addEventListener("click", () => updateValue(" * "));
+document.getElementById(",").addEventListener("click", () => updateValue(", "));
+document.getElementById(")").addEventListener("click", () => updateValue(")"));
 
 // Special button event listeners
-document.getElementById("sin").addEventListener("click", () => updateValueSpecial("sin"));
-document.getElementById("cos").addEventListener("click", () => updateValueSpecial("cos"));
-document.getElementById("tan").addEventListener("click", () => updateValueSpecial("tan"));
-document.getElementById("mean").addEventListener("click", () => updateValueSpecial("mean"));
-document.getElementById("mode").addEventListener("click", () => updateValueSpecial("mode"));
+document.getElementById("sin").addEventListener("click", () => updateValue("sin("));
+document.getElementById("cos").addEventListener("click", () => updateValue("cos("));
+document.getElementById("tan").addEventListener("click", () => updateValue("tan("));
+document.getElementById("mean").addEventListener("click", () => updateValue("mean("));
+document.getElementById("median").addEventListener("click", () => updateValue("median("));
+document.getElementById("mode").addEventListener("click", () => updateValue("mode("));
 
-// Run button
+// Clear and Run buttons
+document.getElementById("clear").addEventListener("click", clearCalculator);
 document.getElementById("run").addEventListener("click", updateValues);
 
-// Helper math functions (Degrees for trig)
+// Helper math functions for Trig (input in degrees)
 function sin(deg) { return Math.sin(deg * (Math.PI / 180)); }
 function cos(deg) { return Math.cos(deg * (Math.PI / 180)); }
 function tan(deg) { return Math.tan(deg * (Math.PI / 180)); }
 
+// Helper functions for Stats
 function mean(...args) {
-    const nums = args.flat();
+    const nums = args.flat().map(Number).filter(n => !isNaN(n));
     if (nums.length === 0) return 0;
     return nums.reduce((a, b) => a + b, 0) / nums.length;
 }
 
+function median(...args) {
+    const nums = args.flat().map(Number).filter(n => !isNaN(n)).sort((a, b) => a - b);
+    if (nums.length === 0) return 0;
+    const mid = Math.floor(nums.length / 2);
+    if (nums.length % 2 !== 0) {
+        return nums[mid];
+    } else {
+        return (nums[mid - 1] + nums[mid]) / 2;
+    }
+}
+
 function mode(...args) {
-    const nums = args.flat();
+    const nums = args.flat().map(Number).filter(n => !isNaN(n));
+    if (nums.length === 0) return "No mode";
     const freq = {};
     let maxFreq = 0;
     let modes = [];
@@ -118,7 +136,7 @@ function mode(...args) {
 
 function updateValues() {
     const inputVal = document.getElementById("username").value;
-    const result = solvetheequation(elsecretoequation || inputVal);
+    const result = solvetheequation(inputVal);
     
     if (result !== "error!error!error!") {
         document.getElementById("hellothere").innerText = result;
@@ -126,10 +144,11 @@ function updateValues() {
     }
 }
 
-function solvetheequation(saywallahibrosaywallahi) {
+function solvetheequation(expression) {
     let result;
     try {
-        result = eval(saywallahibrosaywallahi);
+        if (!expression || expression.trim() === "") throw new Error("Empty");
+        result = eval(expression);
     } catch (e) {
         result = undefined;
     }
@@ -144,15 +163,13 @@ function solvetheequation(saywallahibrosaywallahi) {
 }
 
 function updateValue(character) {
-    equation += character;
-    elsecretoequation += character;
-    document.getElementById("username").value = equation;
+    document.getElementById("username").value += character;
 }
 
-function updateValueSpecial(funcName) {
-    equation += funcName + "(";
-    elsecretoequation += funcName + "(";
-    document.getElementById("username").value = equation;
+function clearCalculator() {
+    document.getElementById("username").value = "";
+    document.getElementById("hellothere").innerText = "";
+    document.getElementById("yeehaw").style.display = "none";
 }
 
 // File Reader
@@ -163,8 +180,6 @@ document.getElementById("fileInput").addEventListener("change", function(event) 
         reader.onload = function(e) {
             const fileText = e.target.result.trim();
             document.getElementById("username").value = fileText;
-            equation = fileText;
-            elsecretoequation = fileText;
         };
         reader.readAsText(file);
     }
