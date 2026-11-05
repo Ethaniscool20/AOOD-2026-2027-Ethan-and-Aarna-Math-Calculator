@@ -122,7 +122,10 @@ document.getElementById("yeehaw").src = "images/dumb-smile.gif";
 }
 return result;
 }
-
+//ai told me to do this, math.pi/180 converts to radians so the calculations can do its thing
+function sin(deg) { return Math.sin(deg * (Math.PI / 180)); }
+function cos(deg) { return Math.cos(deg * (Math.PI / 180)); }
+function tan(deg) { return Math.tan(deg * (Math.PI / 180)); }
 
 function updateValue(character) {
   equation = equation + character;
